@@ -28,11 +28,11 @@ __global__ void  fillHistogram(unsigned long long int* histogram, bool isDR, flo
     if (i < N && j < N)
     {
      //   if (i < j || isDR) // Always compute theta for DR histogram; not always for DD,RR
-      //  {
+      //  {a
 //
             float theta = sinf(decl1[i]) * sinf(decl2[j]) + cosf(decl1[i]) * cosf(decl2[j]) * cosf(rasc1[i] - rasc2[j]);
-            theta = fminf(theta, 1.5f);
-            theta = fmaxf(theta, -1.5f);
+            theta = fminf(theta, 1.0f);
+            theta = fmaxf(theta, -1.0f);
             theta = acosf(theta);
             //theta = acosf(fminf(fmaxf(theta, -1.0f), 1.0f));
             theta = theta * 180.0f / 3.141592654f;
@@ -191,7 +191,7 @@ int main(int argc, char* argv[])
     {
         if (histogramRR[i] > 0)
         {
-            double omega = (histogramDD[i] - 2 * histogramDR[i] + histogramRR[i]) / ((double)(histogramRR[i]));
+            double omega = (histogramDD[i] - 2.0f * histogramDR[i] + histogramRR[i]) / ((double)(histogramRR[i]));
 
             fprintf(outfil, "%6.3f\t%15lf\t%15lld\t%15lld\t%15lld\n", ((float)i) / binsperdegree, omega,
                 histogramDD[i], histogramDR[i], histogramRR[i]);
@@ -208,7 +208,7 @@ int main(int argc, char* argv[])
     printf("   Results written to file %s\n", argv[3]);
     printf("   CPU memory allocated  = %.2lf MB\n", CPUMemory / 1000000.0);
     printf("   GPU memory allocated  = %.2lf MB\n", GPUMemory / 1000000.0);
-
+ 
     walltime = clock() - walltime;
 
     printf("   Total wall clock time = %.2lf s\n", ((float)walltime) / CLOCKS_PER_SEC);
